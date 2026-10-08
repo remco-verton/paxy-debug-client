@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Paxy — Cart Acknowledgement Simulation</title>
+
+    <link rel="stylesheet" href="css/paxy.css">
+
+    <!-- Keep this order: register context/event handlers before the Salesforce SDK. -->
+    <script src="js/page-state.js?v=5"></script>
+    <script src="js/cart-simulation.js"></script>
+    <script src="js/page-context.js?v=5"></script>
+    <script src="js/chat-invite.js"></script>
+    <script src="js/messaging-events.js?v=5"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <script
+        defer
+        src="https://takkt-eu--integ.sandbox.my.site.com/ESWPaxitesting1787580431573/assets/js/bootstrap.min.js"
+        onload="onEmbeddedMessagingLoaded()"
+        onerror="onEmbeddedMessagingError()">
+    </script>
+</head>
+
+<body>
+    <button
+        id="paxy-chat-invite"
+        type="button"
+        aria-label="Chat with Paxy"
+        aria-hidden="true">
+        <span class="paxy-invite-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path d="M21 11.2c0 4.6-4.2 8.3-9.4 8.3-1.4 0-2.7-.3-3.9-.8L3 21l1.5-4.1c-1.5-1.5-2.3-3.5-2.3-5.7C2.2 6.6 6.4 3 11.6 3S21 6.6 21 11.2Z"/>
+            </svg>
+        </span>
+        <span class="paxy-invite-label">Ask Me Anything</span>
+        <span class="paxy-invite-extra">— I'm here to help</span>
+    </button>
+
+    <main class="wrap">
+        <h1>Krafty chat — live context test</h1>
+
+        <p class="sub">
+            Salesforce Embedded Messaging v2 / Paxy initial + live product/category context.
+        </p>
+
+        <section class="card">
+            <h2>Deployment</h2>
+
+            <dl>
+                <dt>Org ID</dt>
+                <dd>00D9K00000L1UMb</dd>
+
+                <dt>Deployment</dt>
+                <dd>Paxi_testing</dd>
+
+                <dt>ESW site</dt>
+                <dd>ESWPaxitesting1787580431573</dd>
+
+                <dt>Environment</dt>
+                <dd>integ sandbox</dd>
+
+                <dt>Language</dt>
+                <dd>en_US</dd>
+            </dl>
+        </section>
+
+        <section class="card">
+            <h2>Cart acknowledgement simulation</h2>
+            <p>No items are added. Trigger the same Paxy host-page-event action you used before.</p>
+            <div class="controls">
+                <label for="paxy-sim-mode">Website result:</label>
+                <select id="paxy-sim-mode" style="padding:.65rem;font:inherit">
+                    <option value="success">Success after 5 seconds</option>
+                    <option value="failure">Failure after 5 seconds</option>
+                    <option value="timeout">No reply — test timeout</option>
+                </select>
+            </div>
+            <p class="hint">The Paxy card waits for the website result. Every outcome is marked as a simulation.</p>
+            <p class="hint">Set <code>HOST_ORIGIN</code> in the renderer to: <code id="paxy-sim-host-origin"></code></p>
+        </section>
+
+        <section class="card">
+            <h2>Live page context</h2>
+
+            <p class="current">
+                Current page article:
+                <strong id="current-article">756798</strong><br>
+                Current main category ID:
+                <strong id="current-category">10001</strong>
+            </p>
+
+            <div class="controls">
+                <input
+                    id="article-input"
+                    type="text"
+                    value="756798"
+                    aria-label="Article number">
+
+                <input
+                    id="category-input"
+                    type="text"
+                    value="10001"
+                    aria-label="Main category ID">
+
+                <button id="update-page-context" type="button">
+                    Simulate variant navigation
+                </button>
+
+                <button id="navigate-product-page" type="button">
+                    Simulate product-page navigation
+                </button>
+            </div>
+
+            <p class="hint">
+                Page context is sent directly as <code>articleCode</code> and
+                <code>categoryId</code>. No hidden pre-chat fields are sent.
+            </p>
+
+            <p class="hint">
+                Variant navigation does <strong>not</strong> reload the page or close the chat.
+                It updates the browser URL and calls <code>setSessionContext()</code>
+                with direct <code>articleCode</code> and <code>categoryId</code> variables.
+            </p>
+
+            <p class="hint">
+                Product-page navigation reloads this page with the entered article and
+                category in the URL. The Salesforce widget initializes again and may
+                restore the existing conversation.
+            </p>
+
+            <p class="hint">
+                This page does <strong>not</strong> use
+                <code>search.result</code> or <code>search_result</code>.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Widget status</h2>
+            <div id="status"></div>
+        </section>
+
+        <section class="card">
+            <h2>Expected log</h2>
+
+            <p class="hint" style="margin:0">
+                <code>Page context article=756798, categoryId=10001</code><br>
+                <code>onEmbeddedMessagingReady — API ready</code><br>
+                <code>Live context set: article=756798, categoryId=10001</code><br>
+                <code>Simulated page navigation: article=111731, categoryId=20002</code>
+            </p>
+        </section>
+    </main>
+    <script src="js/page.js?v=2"></script>
+</body>
+</html>

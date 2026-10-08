@@ -1,0 +1,316 @@
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #f5f6f8;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 6rem;
+}
+
+h1 {
+    margin: 0 0 .25rem;
+    font-size: 1.7rem;
+}
+
+.sub {
+    margin: 0 0 2rem;
+    color: #666;
+}
+
+.card {
+    margin-bottom: 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e3e5e9;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.card h2 {
+    margin: 0 0 .75rem;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #888;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: .4rem 1rem;
+    margin: 0;
+    font-size: .9rem;
+}
+
+dt { color: #666; }
+
+dd {
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+}
+
+.current {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+}
+
+.current strong {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+input,
+button {
+    min-height: 42px;
+    padding: .65rem .8rem;
+    border: 1px solid #c8ccd3;
+    border-radius: 7px;
+    font: inherit;
+}
+
+input {
+    width: 180px;
+}
+
+button {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.hint {
+    margin: 1rem 0 0;
+    color: #555;
+    font-size: .9rem;
+}
+
+.hint code {
+    padding: .1em .35em;
+    border-radius: 4px;
+    background: #eef0f3;
+}
+
+#status {
+    max-height: 360px;
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .82rem;
+    white-space: pre-wrap;
+}
+
+#status .ok   { color: #1a7f37; }
+#status .err  { color: #cf222e; }
+#status .wait { color: #9a6700; }
+#status .info { color: #0969da; }
+
+/*
+ * Delayed custom chat invitation.
+ *
+ * The Salesforce launcher stays visible normally. After 20 seconds
+ * this control appears directly on top of it at the same bottom-right
+ * position, initially matching the launcher pill. It then expands to
+ * the left so it looks like the native launcher itself is inviting the
+ * user to interact.
+ */
+#paxy-chat-invite {
+    position: fixed;
+    right: 32px;
+    bottom: 24px;
+    z-index: 2147483646;
+    width: var(--sf-launcher-width, 224px);
+    height: var(--sf-launcher-height, 56px);
+    min-height: var(--sf-launcher-height, 56px);
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    overflow: hidden;
+    border-style: var(--sf-launcher-border-style, solid);
+    border-width: var(--sf-launcher-border-width, 1px);
+    border-color: var(--sf-launcher-border-color, rgba(255, 255, 255, .14));
+    border-radius: var(--sf-launcher-radius, 28px);
+    background: var(--sf-launcher-background, #2d2d2d);
+    color: var(--sf-launcher-color, #fff);
+    box-shadow: var(--sf-launcher-shadow, none);
+    opacity: 0;
+    transform: scale(.995);
+    transform-origin: right center;
+    pointer-events: none;
+    white-space: nowrap;
+    transition:
+        width .58s cubic-bezier(.2, .82, .2, 1),
+        opacity .12s ease,
+        transform .16s ease,
+        box-shadow .18s ease;
+}
+#paxy-chat-invite {
+    /* Match the native launcher: rounded corners + flat vertical section */
+    border-radius: 20px !important;
+
+    /* Native Salesforce launcher sits closer to the viewport edge */
+    right: 20px !important;
+}
+
+#paxy-chat-invite.invite-visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/*
+ * Keep the right edge fixed over the Salesforce launcher while the
+ * pill grows to the left.
+ */
+#paxy-chat-invite.invite-expanded {
+    width: min(
+        calc(var(--sf-launcher-width, 224px) + 255px),
+        calc(100vw - 48px)
+    );
+}
+
+#paxy-chat-invite:hover {
+    background: #333;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+}
+
+#paxy-chat-invite:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, .45);
+    outline-offset: 3px;
+}
+
+.paxy-invite-icon {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    color: inherit;
+}
+
+.paxy-invite-icon svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/*
+ * If Salesforce exposes its launcher SVG in the host DOM we clone it
+ * into the invite, so the icon is literally the same one. The inline
+ * SVG in the HTML remains a clean fallback.
+ */
+.paxy-invite-icon .sf-native-icon {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.paxy-invite-label {
+    flex: 0 0 auto;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    line-height: 1;
+}
+
+.paxy-invite-extra {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(10px);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1;
+    transition:
+        max-width .5s cubic-bezier(.2, .82, .2, 1) .08s,
+        opacity .2s ease .18s,
+        transform .28s ease .12s;
+}
+
+#paxy-chat-invite.invite-expanded .paxy-invite-extra {
+    max-width: 260px;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 560px) {
+    #paxy-chat-invite {
+        right: 16px;
+        bottom: 16px;
+        width: var(--sf-launcher-width, 214px);
+        height: var(--sf-launcher-height, 54px);
+        min-height: var(--sf-launcher-height, 54px);
+        padding: 0 18px;
+        gap: 12px;
+    }
+
+    #paxy-chat-invite.invite-expanded {
+        width: calc(100vw - 32px);
+    }
+
+    .paxy-invite-label,
+    .paxy-invite-extra {
+        font-size: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #paxy-chat-invite,
+    .paxy-invite-extra {
+        transition: none;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: #e8e8e8;
+        background: #16181d;
+    }
+
+    .sub,
+    dt,
+    .hint {
+        color: #9aa0a8;
+    }
+
+    .card {
+        background: #1e2127;
+        border-color: #2c3038;
+    }
+
+    input,
+    button {
+        color: #e8e8e8;
+        background: #16181d;
+        border-color: #4a505a;
+    }
+
+    .hint code {
+        background: #2c3038;
+    }
+
+    #status .ok   { color: #3fb950; }
+    #status .err  { color: #ff7b72; }
+    #status .wait { color: #d29922; }
+    #status .info { color: #58a6ff; }
+}
